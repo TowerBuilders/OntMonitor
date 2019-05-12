@@ -1,0 +1,31 @@
+{
+  "name": "OntMonitor",
+  "version": "0.0.1",
+  "description": "Monitor the Ontology Network",
+  "author": "Ryu Blockchain Technologies",
+  "repository": "https://github.com/Ryucoin/OntMonitor",
+  "main": "app.js",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "body-parser": "^1.19.0",
+    "express": "^4.16.3",
+    "ontology-ts-sdk": "^1.0.13",
+    "socket.io": "^2.2.0"
+  },
+  "keywords": [
+    "ontology",
+    "network",
+    "mainnet",
+    "monitor",
+    "explorer"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.2"
+  },
+  "scripts": {
+    "test": "eslint ."
+  }
+}
