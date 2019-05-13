@@ -68,7 +68,18 @@ function safeGetBlock(height) {
   });
 }
 
-function beat() {
+function getStats() {
+  const obj = {
+    elapsedTime,
+    totalTransactions,
+    totalBlocks,
+    txPerSecond,
+    blockTime,
+  };
+  return obj;
+}
+
+function beat(io) {
   getBlockHeight()
     .then((height) => {
       getBlock(height)
@@ -96,12 +107,11 @@ function beat() {
             }
           }
 
-          const adjusted = ((totalTime * 1.0) / (delta * 1.0)) * 60.0;
-          txPerSecond = (transactionCount * 1.0) / (adjusted * 1.0);
-          blockTime = (adjusted * 1.0) / (blocks * 1.0);
+          elapsedTime = totalTime * 1.0;
+          txPerSecond = (transactionCount * 1.0) / elapsedTime;
+          blockTime = elapsedTime / (blocks * 1.0);
           totalBlocks = blocks;
           totalTransactions = transactionCount;
-          elapsedTime = totalTime * 1.0;
 
           console.log(`
             Total time elapsed: ${elapsedTime} seconds\n
@@ -110,6 +120,9 @@ function beat() {
             Tx Per Second: ${txPerSecond}\n
             Block Time: ${blockTime} seconds
             `);
+
+          const stats = getStats();
+          io.emit('StatUpdate', stats);
         })
         .catch((error) => {
           console.log(`There was an error getting the block: ${error}`);
@@ -120,13 +133,14 @@ function beat() {
     });
 }
 
-function heartBeat() {
-  beat();
+function heartBeat(io) {
+  beat(io);
   setTimeout(() => {
-    heartBeat();
+    heartBeat(io);
   }, beatTime);
 }
 
 module.exports = {
   heartBeat,
+  getStats,
 };

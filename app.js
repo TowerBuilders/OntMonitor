@@ -50,7 +50,7 @@ let connections = 0;
 app.use(bodyParser.json({ limit: '300KB' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '300KB' }));
 
-routes(app, io);
+routes(app);
 
 io.on('connection', (socket) => {
   connections += 1;
@@ -71,5 +71,5 @@ httpServer.listen(redirectServerPort, () => {
 
 httpsServer.listen(mainServerPort, () => {
   console.log(`Starting HTTPS Server running on port ${mainServerPort}`);
-  ontology.heartBeat();
+  ontology.heartBeat(io);
 });

@@ -1,6 +1,6 @@
 const ontology = require('./ontology.js');
 
-const appRouter = (app, io) => {
+const appRouter = (app) => {
   /*
 
     CORS (Cross Origin Request) configuration
@@ -19,20 +19,18 @@ const appRouter = (app, io) => {
 
   */
   app.get('/', (req, res) => {
-    io.emit('Connection...');
     res.status(200).send('Connected to OntMonitor');
   });
 
-  app.get('/ont', (req, res) => {
-    ontology.ontio()
-      .then((height) => {
-        const obj = { height };
-        const string = JSON.stringify(obj);
-        res.status(200).send(string);
-      })
-      .catch((error) => {
-        res.status(500).send(error);
-      });
+  /*
+
+    Gets the current running statistics
+
+  */
+  app.get('/getStats', (req, res) => {
+    const stats = ontology.getStats();
+    const string = JSON.stringify(stats);
+    res.status(200).send(string);
   });
 };
 
