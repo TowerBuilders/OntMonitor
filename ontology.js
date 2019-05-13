@@ -8,7 +8,6 @@ const node = 'http://dappnode1.ont.io:20336';
 const rpcClient = new RpcClient(node);
 
 const minute = 60;
-const delta = 1 * minute;
 const beatTime = 30000;
 
 let elapsedTime = 0;
@@ -50,7 +49,6 @@ function getBlockHeight() {
 }
 
 function elapsed(start, now) {
-  // const fiveMinutes = 60 * 5;
   const difference = start - now;
   return difference;
 }
@@ -98,7 +96,7 @@ function beat(io) {
               blocks += 1;
               const newTime = newBlock.timestamp;
               const difference = elapsed(timestamp, newTime);
-              if (difference >= delta) {
+              if (difference >= minute) {
                 shouldEnd = true;
                 totalTime = difference;
               } else {
