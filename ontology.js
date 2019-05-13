@@ -108,18 +108,19 @@ function beat(io) {
           }
 
           elapsedTime = totalTime * 1.0;
-          txPerSecond = (transactionCount * 1.0) / elapsedTime;
-          blockTime = elapsedTime / (blocks * 1.0);
-          totalBlocks = blocks;
-          totalTransactions = transactionCount;
+          totalTransactions = transactionCount * 1.0;
+          totalBlocks = blocks * 1.0;
+          txPerSecond = Math.round((totalTransactions / elapsedTime) * 100) / 100;
+          blockTime = Math.round((elapsedTime / totalBlocks) * 100) / 100;
 
-          console.log(`
-            Total time elapsed: ${elapsedTime} seconds\n
-            Total Transactions: ${totalTransactions}\n
-            Total Blocks: ${totalBlocks}\n
-            Tx Per Second: ${txPerSecond}\n
-            Block Time: ${blockTime} seconds
-            `);
+          const alertString = `
+          Total time elapsed: ${elapsedTime} seconds
+          Total Transactions: ${totalTransactions}
+          Total Blocks: ${totalBlocks}
+          Tx Per Second: ${txPerSecond}
+          Block Time: ${blockTime} seconds
+          `;
+          console.log(alertString);
 
           const stats = getStats();
           io.emit('StatUpdate', stats);
