@@ -18,6 +18,7 @@ const http = require('http');
 const https = require('https');
 const routes = require('./routes.js');
 const utils = require('./utils.js');
+const ontology = require('./ontology.js');
 
 let domain = '';
 let credentials = {};
@@ -70,4 +71,5 @@ httpServer.listen(redirectServerPort, () => {
 
 httpsServer.listen(mainServerPort, () => {
   console.log(`Starting HTTPS Server running on port ${mainServerPort}`);
+  ontology.heartBeat();
 });

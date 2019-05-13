@@ -3,5 +3,6 @@ module.exports = {
     "rules": {
         'no-console': 'off',
         'max-len': 'off',
+        'no-await-in-loop': 'off'
     },
 };
