@@ -5,4 +5,8 @@ module.exports = {
         'max-len': 'off',
         'no-await-in-loop': 'off'
     },
+    "env": {
+        "browser": true,
+        "node": true
+    }
 };

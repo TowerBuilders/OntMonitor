@@ -32,6 +32,18 @@ const appRouter = (app) => {
     const string = JSON.stringify(stats);
     res.status(200).send(string);
   });
+
+  app.get('/html', (req, res) => {
+    res.sendFile(`${__dirname}/index.html`);
+  });
+
+  app.get('/index.js', (req, res) => {
+    res.sendFile(`${__dirname}/index.js`);
+  });
+
+  app.get('/socket.io.js', (req, res) => {
+    res.sendFile(`${__dirname}/socket.io.js`);
+  });
 };
 
 // Allows other files (app.js) access to the code here
