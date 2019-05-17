@@ -9,9 +9,11 @@ function parseStats(statObj) {
     totalBlocks,
     txPerSecond,
     blockTime,
+    latest,
   } = statObj;
 
-  document.getElementById('elapsed').innerHTML = `Elapsed Time: ${elapsedTime}`;
+  document.getElementById('latest').innerHTML = `Latest Block: ${latest}`;
+  document.getElementById('elapsed').innerHTML = `In the last ${elapsedTime} seconds`;
   document.getElementById('totalTx').innerHTML = `Total Transactions: ${totalTransactions}`;
   document.getElementById('totalBlocks').innerHTML = `Total Blocks: ${totalBlocks}`;
   document.getElementById('txPerSecond').innerHTML = `Transactions Per Second: ${txPerSecond}`;

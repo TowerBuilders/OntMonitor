@@ -8,31 +8,43 @@ const node = 'http://dappnode1.ont.io:20336';
 const rpcClient = new RpcClient(node);
 
 const minute = 60;
-const beatTime = 30000;
+const beatTime = 2500;
 
 let elapsedTime = 0;
 let totalTransactions = 0;
 let totalBlocks = 0;
 let txPerSecond = 0;
 let blockTime = 0;
+let latest = 0;
+
+const blockDict = {};
 
 function getBlock(height) {
   return new Promise((resolve, reject) => {
-    rpcClient.getBlockJson(height)
-      .then((res) => {
-        const header = res.result.Header;
-        const timestamp = header.Timestamp;
-        const transactionCount = res.result.Transactions.length;
-        const block = {
-          timestamp,
-          transactionCount,
-        };
+    if (blockDict[height] != null) {
+      resolve(blockDict[height]);
+    } else {
+      rpcClient.getBlockJson(height)
+        .then((res) => {
+          const header = res.result.Header;
+          const timestamp = header.Timestamp;
+          const transactionCount = res.result.Transactions.length;
+          const block = {
+            timestamp,
+            transactionCount,
+          };
 
-        resolve(block);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+          blockDict[height] = block;
+          if (blockDict[height - 100] != null) {
+            delete blockDict[height - 100];
+          }
+
+          resolve(block);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    }
   });
 }
 
@@ -73,6 +85,7 @@ function getStats() {
     totalBlocks,
     txPerSecond,
     blockTime,
+    latest,
   };
   return obj;
 }
@@ -110,6 +123,7 @@ function beat(io) {
           totalBlocks = blocks * 1.0;
           txPerSecond = Math.round((totalTransactions / elapsedTime) * 100) / 100;
           blockTime = Math.round((elapsedTime / totalBlocks) * 100) / 100;
+          latest = height;
 
           const alertString = `
           Total time elapsed: ${elapsedTime} seconds
@@ -117,6 +131,7 @@ function beat(io) {
           Total Blocks: ${totalBlocks}
           Tx Per Second: ${txPerSecond}
           Block Time: ${blockTime} seconds
+          Latest: ${latest}
           `;
           console.log(alertString);
 
