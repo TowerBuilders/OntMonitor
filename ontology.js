@@ -1,4 +1,5 @@
 const ont = require('ontology-ts-sdk');
+const twitter = require('./twitter.js');
 
 const {
   RpcClient,
@@ -18,6 +19,8 @@ let txPerSecond = 0;
 let blockTime = 0;
 
 const blockDict = {};
+
+const tweetTimeout = 6 * 60 * 60 * 1000;
 
 function getBlock(height) {
   return new Promise((resolve, reject) => {
@@ -177,11 +180,23 @@ function beat(io) {
     });
 }
 
+function tweet() {
+  setInterval(() => {
+    const stats = getStats();
+    if (stats.latest !== 0) {
+      twitter.sendUpdate(stats);
+    }
+  }, tweetTimeout);
+}
+
 function heartBeat(io) {
-  beat(io);
-  setTimeout(() => {
-    heartBeat(io);
+  setInterval(() => {
+    beat(io);
   }, beatTime);
+
+  setTimeout(() => {
+    tweet();
+  }, 30000); // Delay start 30 seconds
 }
 
 module.exports = {
