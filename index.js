@@ -1,6 +1,6 @@
 /* global io */
 
-const socket = io('http://localhost');
+const socket = io('monitor.ryu.games');
 
 function parseStats(statObj) {
   const {
