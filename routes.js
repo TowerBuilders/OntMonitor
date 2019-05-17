@@ -44,6 +44,10 @@ const appRouter = (app) => {
   app.get('/socket.io.js', (req, res) => {
     res.sendFile(`${__dirname}/socket.io.js`);
   });
+
+  app.get('/socket.io.js.map', (req, res) => {
+    res.sendFile(`${__dirname}/socket.io.js.map`);
+  });
 };
 
 // Allows other files (app.js) access to the code here

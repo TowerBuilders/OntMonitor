@@ -1,7 +1,8 @@
+/* global io */
+
 const socket = io('http://localhost');
 
-function parseStats(data) {
-  const statObj = JSON.parse(data);
+function parseStats(statObj) {
   const {
     elapsedTime,
     totalTransactions,
@@ -19,7 +20,8 @@ function parseStats(data) {
 
 function getStats() {
   $.get('/getStats', (data) => {
-    parseStats(data);
+    const statObj = JSON.parse(data);
+    parseStats(statObj);
   });
 }
 
