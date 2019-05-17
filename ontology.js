@@ -144,24 +144,26 @@ function beat(io) {
                   }
                 });
 
-                latest = height;
-                elapsedTime = elapsed(oldest, timestamp);
-                totalTransactions = txCount * 1.0;
-                txPerSecond = Math.round((totalTransactions / elapsedTime) * 100) / 100;
-                blockTime = Math.round((elapsedTime / previous) * 100) / 100;
+                if (height > latest) {
+                  latest = height;
+                  elapsedTime = elapsed(oldest, timestamp);
+                  totalTransactions = txCount * 1.0;
+                  txPerSecond = Math.round((totalTransactions / elapsedTime) * 100) / 100;
+                  blockTime = Math.round((elapsedTime / previous) * 100) / 100;
 
-                const alertString = `
-                Latest Block: ${latest}
-                In the previous ${previous} blocks
-                Total time elapsed: ${elapsedTime} seconds
-                Total Transactions: ${totalTransactions}
-                Tx Per Second: ${txPerSecond}
-                Block Time: ${blockTime} seconds
-                `;
-                console.log(alertString);
+                  const alertString = `
+                  Latest Block: ${latest}
+                  In the previous ${previous} blocks
+                  Total time elapsed: ${elapsedTime} seconds
+                  Total Transactions: ${totalTransactions}
+                  Tx Per Second: ${txPerSecond}
+                  Block Time: ${blockTime} seconds
+                  `;
+                  console.log(alertString);
 
-                const stats = getStats();
-                io.emit('StatUpdate', stats);
+                  const stats = getStats();
+                  io.emit('StatUpdate', stats);
+                }
               });
           })
           .catch((error) => {
