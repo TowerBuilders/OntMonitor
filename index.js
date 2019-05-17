@@ -4,18 +4,18 @@ const socket = io('http://localhost');
 
 function parseStats(statObj) {
   const {
+    latest,
+    previous,
     elapsedTime,
     totalTransactions,
-    totalBlocks,
     txPerSecond,
     blockTime,
-    latest,
   } = statObj;
 
   document.getElementById('latest').innerHTML = `Latest Block: ${latest}`;
-  document.getElementById('elapsed').innerHTML = `In the last ${elapsedTime} seconds`;
+  document.getElementById('previous').innerHTML = `In the previous ${previous} blocks`;
+  document.getElementById('elapsed').innerHTML = `Total time elapsed: ${elapsedTime} seconds`;
   document.getElementById('totalTx').innerHTML = `Total Transactions: ${totalTransactions}`;
-  document.getElementById('totalBlocks').innerHTML = `Total Blocks: ${totalBlocks}`;
   document.getElementById('txPerSecond').innerHTML = `Transactions Per Second: ${txPerSecond}`;
   document.getElementById('blockTime').innerHTML = `Block Time: ${blockTime}`;
 }
