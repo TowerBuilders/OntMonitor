@@ -181,12 +181,21 @@ function beat(io) {
 }
 
 function tweet() {
-  setInterval(() => {
-    const stats = getStats();
-    if (stats.latest !== 0) {
-      twitter.sendUpdate(stats);
-    }
-  }, tweetTimeout);
+  let stats = getStats();
+  if (stats.latest !== 0) {
+    twitter.sendUpdate(stats);
+
+    setInterval(() => {
+      stats = getStats();
+      if (stats.latest !== 0) {
+        twitter.sendUpdate(stats);
+      }
+    }, tweetTimeout);
+  } else {
+    setTimeout(() => {
+      tweet();
+    }, 5000);
+  }
 }
 
 function heartBeat(io) {
