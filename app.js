@@ -20,7 +20,7 @@ const routes = require('./routes.js');
 const utils = require('./utils.js');
 const ontology = require('./ontology.js');
 
-let domain = '';
+let domain = 'monitor.ryu.games';
 let credentials = {};
 
 if (fs.existsSync(`/etc/letsencrypt/live/${domain}/privkey.pem`)) {
