@@ -1,5 +1,3 @@
-const ontology = require('./ontology.js');
-
 const appRouter = (app) => {
   /*
 
@@ -13,32 +11,16 @@ const appRouter = (app) => {
     next();
   });
 
-  /*
-
-    Test that the API is active
-
-  */
   app.get('/', (req, res) => {
-    res.status(200).send('Connected to OntMonitor');
-  });
-
-  /*
-
-    Gets the current running statistics
-
-  */
-  app.get('/getStats', (req, res) => {
-    const stats = ontology.getStats();
-    const string = JSON.stringify(stats);
-    res.status(200).send(string);
-  });
-
-  app.get('/html', (req, res) => {
     res.sendFile(`${__dirname}/index.html`);
   });
 
   app.get('/index.js', (req, res) => {
     res.sendFile(`${__dirname}/index.js`);
+  });
+
+  app.get('/index.css', (req, res) => {
+    res.sendFile(`${__dirname}/index.css`);
   });
 
   app.get('/socket.io.js', (req, res) => {
@@ -47,6 +29,14 @@ const appRouter = (app) => {
 
   app.get('/socket.io.js.map', (req, res) => {
     res.sendFile(`${__dirname}/socket.io.js.map`);
+  });
+
+  app.get('/bootstrap/css/bootstrap.min.css', (req, res) => {
+    res.sendFile(`${__dirname}/bootstrap/css/bootstrap.min.css`);
+  });
+
+  app.get('/bootstrap/css/bootstrap.min.css.map', (req, res) => {
+    res.sendFile(`${__dirname}/bootstrap/css/bootstrap.min.css.map`);
   });
 };
 

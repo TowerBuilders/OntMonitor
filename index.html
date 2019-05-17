@@ -1,13 +1,27 @@
 <html>
   <head>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/index.css">
   </head>
   <body>
-    <p id="latest">Latest Block: 0</p>
-    <p id="previous">In the previous 1k blocks</p>
-    <p id="elapsed">Total time elapsed: 0 seconds</p>
-    <p id="totalTx">Total Transactions: 0</p>
-    <p id="txPerSecond">Transactions Per Second: 0</p>
-    <p id="blockTime">Average Block Time: 0</p>
+    <table class="table">
+      <thead class="thead-dark">
+       <tr>
+         <th id="previous" style="text-align: left">In the previous 1k blocks</th>
+         <th id="elapsed" style="text-align: left">0 seconds have elapsed</th>
+       </tr>
+     </thead>
+      <tbody>
+        <tr>
+          <td id="latest">Latest Block: 0</td>
+          <td id="totalTx">Total Transactions: 0</td>
+        </tr>
+        <tr>
+          <td id="txPerSecond">Transactions Per Second: 0</td>
+          <td id="blockTime">Average Block Time: 0</td>
+        </tr>
+      </tbody>
+    </table>
   </body>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <script src="/socket.io/socket.io.js"></script>

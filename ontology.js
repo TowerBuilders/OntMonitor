@@ -54,6 +54,7 @@ function getBlock(height) {
           }
         })
         .catch((error) => {
+          console.log('Failed to get block');
           reject(error);
         });
     }
