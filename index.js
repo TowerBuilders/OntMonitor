@@ -23,3 +23,12 @@ function parseStats(statObj) {
 socket.on('StatUpdate', (data) => {
   parseStats(data);
 });
+
+function getStats() {
+  $.get('/getStats', (data) => {
+    const statObj = JSON.parse(data);
+    parseStats(statObj);
+  });
+}
+
+getStats();

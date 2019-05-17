@@ -1,3 +1,5 @@
+const ontology = require('./ontology.js');
+
 const appRouter = (app) => {
   /*
 
@@ -13,6 +15,12 @@ const appRouter = (app) => {
 
   app.get('/', (req, res) => {
     res.sendFile(`${__dirname}/index.html`);
+  });
+
+  app.get('/getStats', (req, res) => {
+    const stats = ontology.getStats();
+    const string = JSON.stringify(stats);
+    res.status(200).send(string);
   });
 
   app.get('/index.js', (req, res) => {
