@@ -7,9 +7,10 @@ const {
 const node = 'http://dappnode1.ont.io:20336';
 const rpcClient = new RpcClient(node);
 
-const minute = 60;
-const beatTime = 2500;
+const duration = 300; // In seconds
+const beatTime = 1000; // In milliseconds
 
+// Exported Stats
 let elapsedTime = 0;
 let totalTransactions = 0;
 let totalBlocks = 0;
@@ -26,20 +27,32 @@ function getBlock(height) {
     } else {
       rpcClient.getBlockJson(height)
         .then((res) => {
-          const header = res.result.Header;
-          const timestamp = header.Timestamp;
-          const transactionCount = res.result.Transactions.length;
-          const block = {
-            timestamp,
-            transactionCount,
-          };
+          if (res.desc === 'UNKNOWN BLOCK') {
+            setTimeout(() => {
+              getBlock(height)
+                .then((b) => {
+                  resolve(b);
+                })
+                .catch((e) => {
+                  reject(e);
+                });
+            }, 500);
+          } else {
+            const header = res.result.Header;
+            const timestamp = header.Timestamp;
+            const transactionCount = res.result.Transactions.length;
+            const block = {
+              timestamp,
+              transactionCount,
+            };
 
-          blockDict[height] = block;
-          if (blockDict[height - 100] != null) {
-            delete blockDict[height - 100];
+            blockDict[height] = block;
+            if (blockDict[height - duration - 5] != null) {
+              delete blockDict[height - duration - 5];
+            }
+
+            resolve(block);
           }
-
-          resolve(block);
         })
         .catch((error) => {
           reject(error);
@@ -109,7 +122,7 @@ function beat(io) {
               blocks += 1;
               const newTime = newBlock.timestamp;
               const difference = elapsed(timestamp, newTime);
-              if (difference >= minute) {
+              if (difference >= duration) {
                 shouldEnd = true;
                 totalTime = difference;
               } else {
@@ -118,25 +131,28 @@ function beat(io) {
             }
           }
 
-          elapsedTime = totalTime * 1.0;
-          totalTransactions = transactionCount * 1.0;
-          totalBlocks = blocks * 1.0;
-          txPerSecond = Math.round((totalTransactions / elapsedTime) * 100) / 100;
-          blockTime = Math.round((elapsedTime / totalBlocks) * 100) / 100;
-          latest = height;
+          if (height > latest) {
+            latest = height;
 
-          const alertString = `
-          Total time elapsed: ${elapsedTime} seconds
-          Total Transactions: ${totalTransactions}
-          Total Blocks: ${totalBlocks}
-          Tx Per Second: ${txPerSecond}
-          Block Time: ${blockTime} seconds
-          Latest: ${latest}
-          `;
-          console.log(alertString);
+            elapsedTime = totalTime * 1.0;
+            totalTransactions = transactionCount * 1.0;
+            totalBlocks = blocks * 1.0;
+            txPerSecond = Math.round((totalTransactions / elapsedTime) * 100) / 100;
+            blockTime = Math.round((elapsedTime / totalBlocks) * 100) / 100;
 
-          const stats = getStats();
-          io.emit('StatUpdate', stats);
+            const alertString = `
+            Total time elapsed: ${elapsedTime} seconds
+            Total Transactions: ${totalTransactions}
+            Total Blocks: ${totalBlocks}
+            Tx Per Second: ${txPerSecond}
+            Block Time: ${blockTime} seconds
+            Latest: ${latest}
+            `;
+            console.log(alertString);
+
+            const stats = getStats();
+            io.emit('StatUpdate', stats);
+          }
         })
         .catch((error) => {
           console.log(`There was an error getting the block: ${error}`);
