@@ -36,14 +36,12 @@ function sendUpdate(stats) {
 
   const avgBlocks = Math.round((totalTransactions / previous) * 100.0) / 100.0;
 
-  let tweetText = `.@OntologyNetwork latest block: #${latest}\n\n`;
+  let tweetText = `#ONT (@OntologyNetwork) latest block: #${latest}\n\n`;
   tweetText += `Last ${previous} block stats:\n`;
   tweetText += `${time} elapsed\n`;
   tweetText += `${avgBlocks} tx per block\n`;
   tweetText += `${txPerSecond} tx per second\n`;
   tweetText += `${blockTime} sec average block time\n\n`;
-  tweetText += 'Source: https://monitor.ryu.games\n\n';
-  tweetText += '#ONT #Ontology';
 
   sendTweet(tweetText);
 }

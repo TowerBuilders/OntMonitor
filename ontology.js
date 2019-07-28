@@ -9,7 +9,7 @@ const node = 'http://dappnode1.ont.io:20336';
 const rpcClient = new RpcClient(node);
 
 const previous = 1000; // In blocks
-const beatTime = 1000; // In milliseconds
+const refreshDelay = 1000; // In milliseconds
 
 // Exported Stats
 let latest = 0;
@@ -22,6 +22,11 @@ const blockDict = {};
 
 const tweetTimeout = 6 * 60 * 60 * 1000;
 
+/*
+
+  Gets a block for the height
+
+*/
 function getBlock(height) {
   return new Promise((resolve, reject) => {
     if (blockDict[height] != null) {
@@ -64,6 +69,11 @@ function getBlock(height) {
   });
 }
 
+/*
+
+  Gets the current block height
+
+*/
 function getBlockHeight() {
   return new Promise((resolve, reject) => {
     rpcClient.getBlockHeight()
@@ -76,11 +86,21 @@ function getBlockHeight() {
   });
 }
 
-function elapsed(start, now) {
-  const difference = now - start;
+/*
+
+  Gets the time elapsed between two times
+
+*/
+function elapsed(startTime, now) {
+  const difference = now - startTime;
   return difference;
 }
 
+/*
+
+  Gets a block for the given height, but fails silently
+
+*/
 function safeGetBlock(height, retry) {
   return new Promise((resolve) => {
     getBlock(height)
@@ -103,6 +123,11 @@ function safeGetBlock(height, retry) {
   });
 }
 
+/*
+
+  Makes object with all of the stats
+
+*/
 function getStats() {
   const obj = {
     latest,
@@ -115,6 +140,11 @@ function getStats() {
   return obj;
 }
 
+/*
+
+  Builds an array of promises to get the last 1000 blocks
+
+*/
 function getPromises(height) {
   const promises = [];
   for (let i = 1; i <= previous; i += 1) {
@@ -123,7 +153,12 @@ function getPromises(height) {
   return promises;
 }
 
-function beat(io) {
+/*
+
+  Updates the network statistics
+
+*/
+function refreshNetworkStats(io) {
   getBlockHeight()
     .then((height) => {
       if (height > latest) {
@@ -180,7 +215,12 @@ function beat(io) {
     });
 }
 
-function tweet() {
+/*
+
+  Tries to send out a tweet update with network stats
+
+*/
+function tweetNetworkStats() {
   let stats = getStats();
   if (stats.latest !== 0) {
     twitter.sendUpdate(stats);
@@ -193,22 +233,27 @@ function tweet() {
     }, tweetTimeout);
   } else {
     setTimeout(() => {
-      tweet();
+      tweetNetworkStats();
     }, 5000);
   }
 }
 
-function heartBeat(io) {
+/*
+
+  Starts the system
+
+*/
+function start(io) {
   setInterval(() => {
-    beat(io);
-  }, beatTime);
+    refreshNetworkStats(io);
+  }, refreshDelay);
 
   setTimeout(() => {
-    tweet();
+    tweetNetworkStats();
   }, 30000); // Delay start 30 seconds
 }
 
 module.exports = {
-  heartBeat,
+  start,
   getStats,
 };

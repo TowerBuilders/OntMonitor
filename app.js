@@ -71,5 +71,5 @@ httpServer.listen(redirectServerPort, () => {
 
 httpsServer.listen(mainServerPort, () => {
   console.log(`Starting HTTPS Server running on port ${mainServerPort}`);
-  ontology.heartBeat(io);
+  ontology.start(io);
 });
