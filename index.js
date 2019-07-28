@@ -2,6 +2,18 @@
 
 const socket = io('monitor.ryu.games');
 
+function secondsToHms(sec) {
+  const d = Number(sec);
+  const h = Math.floor(d / 3600);
+  const m = Math.floor((d % 3600) / 60);
+  const s = Math.floor(d % 3600 % 60);
+
+  const hDisplay = h > 0 ? h + (h === 1 ? ' hour, ' : ' hours, ') : '';
+  const mDisplay = `${m} ${(m === 1 ? 'minute' : 'minutes')} and `;
+  const sDisplay = `${s} ${(s === 1 ? 'second' : 'seconds')}`;
+  return `${hDisplay}${mDisplay}${sDisplay}`;
+}
+
 function parseStats(statObj) {
   const {
     latest,
@@ -12,16 +24,10 @@ function parseStats(statObj) {
     blockTime,
   } = statObj;
 
-  const minutes = Math.round((elapsedTime / 60.0) * 100.0) / 100.0;
-  let time = `${minutes} minutes`;
-  if (minutes > 60) {
-    const hours = Math.round((elapsedTime / 3600.0) * 100.0) / 100.0;
-    time = `${hours} hours`;
-  }
-
+  const elapsedText = secondsToHms(elapsedTime);
   document.getElementById('latest').innerHTML = `Latest Block: ${latest}`;
   document.getElementById('previous').innerHTML = `In the previous ${previous} blocks`;
-  document.getElementById('elapsed').innerHTML = `${time} have elapsed`;
+  document.getElementById('elapsed').innerHTML = `${elapsedText} have elapsed`;
   document.getElementById('totalTx').innerHTML = `Total Transactions: ${totalTransactions}`;
   document.getElementById('txPerSecond').innerHTML = `Transactions Per Second: ${txPerSecond}`;
   document.getElementById('blockTime').innerHTML = `Block Time: ${blockTime}`;

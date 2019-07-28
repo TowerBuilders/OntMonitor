@@ -18,6 +18,7 @@ let totalTransactions = 0;
 let elapsedTime = 0;
 let txPerSecond = 0;
 let blockTime = 0;
+let sinceLastBlock = 0;
 
 const blockDict = {};
 const oneMinute = 60 * 1000;
@@ -136,6 +137,7 @@ function getStats() {
     totalTransactions,
     txPerSecond,
     blockTime,
+    sinceLastBlock,
   };
   return obj;
 }
@@ -189,6 +191,9 @@ function refreshNetworkStats(io) {
                   totalTransactions = txCount * 1.0;
                   txPerSecond = Math.round((totalTransactions / elapsedTime) * 100) / 100;
                   blockTime = Math.round((elapsedTime / previous) * 100) / 100;
+                  const now = new Date().getTime();
+                  const unixTS = now / 1000;
+                  sinceLastBlock = elapsed(timestamp, unixTS);
 
                   const alertString = `
                   Latest Block: ${latest}
@@ -197,6 +202,7 @@ function refreshNetworkStats(io) {
                   Total Transactions: ${totalTransactions}
                   Tx Per Second: ${txPerSecond}
                   Block Time: ${blockTime} seconds
+                  Since Last Block: ${sinceLastBlock} seconds
                   `;
                   console.log(alertString);
 
