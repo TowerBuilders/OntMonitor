@@ -13,6 +13,18 @@ function sendTweet(tweetText) {
   });
 }
 
+function secondsToHms(sec) {
+  const d = Number(sec);
+  const h = Math.floor(d / 3600);
+  const m = Math.floor((d % 3600) / 60);
+  const s = Math.floor(d % 3600 % 60);
+
+  const hDisplay = h > 0 ? h + (h === 1 ? ' hour, ' : ' hours, ') : '';
+  const mDisplay = `${m} ${(m === 1 ? 'minute' : 'minutes')} and `;
+  const sDisplay = `${s} ${(s === 1 ? 'second' : 'seconds')}`;
+  return `${hDisplay}${mDisplay}${sDisplay}`;
+}
+
 function sendUpdate(stats) {
   const {
     latest,
@@ -27,24 +39,7 @@ function sendUpdate(stats) {
     return;
   }
 
-  const seconds = elapsedTime;
-  let elapsedText = '';
-  if (seconds < 3600) {
-    const minutes = Math.floor(seconds / 60);
-    const sec = seconds % 60;
-    const secSuffix = sec === 1 ? 'second' : 'seconds';
-    const minSuffix = minutes === 1 ? 'minute' : 'minutes';
-    elapsedText = `${minutes} ${minSuffix} and ${sec} ${secSuffix}`;
-  } else {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const sec = seconds % 60;
-    const secSuffix = sec === 1 ? 'second' : 'seconds';
-    const minSuffix = minutes === 1 ? 'minute' : 'minutes';
-    const hrSuffix = hours === 1 ? 'hour' : 'hours';
-    elapsedText = `${hours} ${hrSuffix}, ${minutes} ${minSuffix} and ${sec} ${secSuffix}`;
-  }
-
+  const elapsedText = secondsToHms(elapsedTime);
   const avgBlocks = Math.round((totalTransactions / previous) * 100.0) / 100.0;
 
   let tweetText = `#ONT (@OntologyNetwork) latest block: #${latest}\n\n`;
