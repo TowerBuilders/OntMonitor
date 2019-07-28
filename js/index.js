@@ -22,6 +22,7 @@ function parseStats(statObj) {
     totalTransactions,
     txPerSecond,
     blockTime,
+    sinceLastBlock,
   } = statObj;
 
   const elapsedText = secondsToHms(elapsedTime);
@@ -31,6 +32,7 @@ function parseStats(statObj) {
   document.getElementById('totalTx').innerHTML = `Total Transactions: ${totalTransactions}`;
   document.getElementById('txPerSecond').innerHTML = `Transactions Per Second: ${txPerSecond}`;
   document.getElementById('blockTime').innerHTML = `Block Time: ${blockTime}`;
+  document.getElementById('sinceLastBlock').innerHTML = `Seconds since last block: ${sinceLastBlock}`;
 }
 
 socket.on('StatUpdate', (data) => {
