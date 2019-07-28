@@ -1,4 +1,4 @@
-const ontology = require('./ontology.js');
+const ontology = require('./js/ontology.js');
 
 const appRouter = (app) => {
   /*
@@ -24,11 +24,11 @@ const appRouter = (app) => {
   });
 
   app.get('/index.js', (req, res) => {
-    res.sendFile(`${__dirname}/index.js`);
+    res.sendFile(`${__dirname}/js/index.js`);
   });
 
   app.get('/index.css', (req, res) => {
-    res.sendFile(`${__dirname}/index.css`);
+    res.sendFile(`${__dirname}/css/index.css`);
   });
 
   app.get('/socket.io.js', (req, res) => {

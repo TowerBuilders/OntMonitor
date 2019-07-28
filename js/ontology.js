@@ -161,6 +161,7 @@ function getPromises(height) {
 
 */
 function refreshNetworkStats(io) {
+  console.log('Refreshing...');
   getBlockHeight()
     .then((height) => {
       if (height > latest) {
@@ -208,6 +209,8 @@ function refreshNetworkStats(io) {
 
                   const stats = getStats();
                   io.emit('StatUpdate', stats);
+                } else {
+                  console.log(`${height} < ${latest}`);
                 }
               });
           })

@@ -17,8 +17,8 @@ const httpApp = express();
 const http = require('http');
 const https = require('https');
 const routes = require('./routes.js');
-const utils = require('./utils.js');
-const ontology = require('./ontology.js');
+const utils = require('./js/utils.js');
+const ontology = require('./js/ontology.js');
 
 let domain = 'monitor.ryu.games';
 let credentials = {};
