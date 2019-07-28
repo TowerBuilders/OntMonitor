@@ -185,7 +185,7 @@ function refreshNetworkStats(io) {
                   }
                 });
 
-                if (height > latest) {
+                if (height >= latest) {
                   latest = height;
                   elapsedTime = elapsed(oldest, timestamp);
                   totalTransactions = txCount * 1.0;
