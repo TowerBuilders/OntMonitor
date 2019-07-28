@@ -25,7 +25,7 @@ function secondsToHms(sec) {
   return `${hDisplay}${mDisplay}${sDisplay}`;
 }
 
-function sendUpdate(stats) {
+function sendNetworkUpdate(stats) {
   const {
     latest,
     previous,
@@ -53,5 +53,5 @@ function sendUpdate(stats) {
 }
 
 module.exports = {
-  sendUpdate,
+  sendNetworkUpdate,
 };

@@ -230,7 +230,7 @@ function tweetNetworkStats() {
   console.log('Attempting to tweet network statistics');
   const stats = getStats();
   if (stats.latest !== 0) { // If stats have loaded
-    twitter.sendUpdate(stats);
+    twitter.sendNetworkUpdate(stats);
   } else { // Otherwise try again in five seconds
     setTimeout(() => {
       tweetNetworkStats();
