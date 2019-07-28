@@ -19,6 +19,7 @@ socket.on('StatUpdate', (data) => {
     totalTransactions,      // total transactions in the period
     txPerSecond,            // avg transactions per second
     blockTime,              // time per block
+    sinceLastBlock,         // seconds since the last block
   } = data;
   // Do whatever you want here...
 });
