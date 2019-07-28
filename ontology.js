@@ -1,5 +1,6 @@
 const ont = require('ontology-ts-sdk');
 const twitter = require('./twitter.js');
+const tweetConfig = require('./tweetConfig.js');
 
 const {
   RpcClient,
@@ -19,8 +20,7 @@ let txPerSecond = 0;
 let blockTime = 0;
 
 const blockDict = {};
-
-const tweetTimeout = 6 * 60 * 60 * 1000;
+const oneMinute = 60 * 1000;
 
 /*
 
@@ -221,21 +221,62 @@ function refreshNetworkStats(io) {
 
 */
 function tweetNetworkStats() {
-  let stats = getStats();
-  if (stats.latest !== 0) {
+  const stats = getStats();
+  if (stats.latest !== 0) { // If stats have loaded
     twitter.sendUpdate(stats);
-
-    setInterval(() => {
-      stats = getStats();
-      if (stats.latest !== 0) {
-        twitter.sendUpdate(stats);
-      }
-    }, tweetTimeout);
-  } else {
+  } else { // Otherwise try again in five seconds
     setTimeout(() => {
       tweetNetworkStats();
     }, 5000);
   }
+}
+
+/*
+
+  Checks whether the current time matches
+
+*/
+function canTweet(hr, min) {
+  const d = new Date();
+  const currentHr = d.getHours();
+  const currentMin = d.getMinutes();
+  return currentHr === hr && currentMin === min;
+}
+
+/*
+
+  Sends a tweet if the current time is whitelisted
+
+*/
+function executeTweet(timeArray, tweet) {
+  const { length } = timeArray;
+  for (let i = 0; i < length; i += 1) {
+    const time = timeArray[i];
+    if (time.length === 2) {
+      const hr = time[0];
+      const min = time[1];
+      if (canTweet(hr, min)) {
+        tweet();
+        break;
+      }
+    }
+  }
+}
+
+/*
+
+  Called when the app initializes
+  Tries to send the tweets every minute
+
+*/
+function startTweetBot() {
+  setInterval(() => {
+    const {
+      networkStatTimes,
+    } = tweetConfig.config;
+
+    executeTweet(networkStatTimes, tweetNetworkStats);
+  }, oneMinute);
 }
 
 /*
@@ -248,9 +289,7 @@ function start(io) {
     refreshNetworkStats(io);
   }, refreshDelay);
 
-  setTimeout(() => {
-    tweetNetworkStats();
-  }, 30000); // Delay start 30 seconds
+  startTweetBot();
 }
 
 module.exports = {
