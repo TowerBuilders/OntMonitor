@@ -27,18 +27,29 @@ function sendUpdate(stats) {
     return;
   }
 
-  const minutes = Math.round((elapsedTime / 60.0) * 100.0) / 100.0;
-  let time = `${minutes} minutes`;
-  if (minutes > 60) {
-    const hours = Math.round((elapsedTime / 3600.0) * 100.0) / 100.0;
-    time = `${hours} hours`;
+  const seconds = elapsedTime;
+  let elapsedText = '';
+  if (seconds < 3600) {
+    const minutes = Math.floor(seconds / 60);
+    const sec = seconds % 60;
+    const secSuffix = sec === 1 ? 'second' : 'seconds';
+    const minSuffix = minutes === 1 ? 'minute' : 'minutes';
+    elapsedText = `${minutes} ${minSuffix} and ${sec} ${secSuffix}`;
+  } else {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const sec = seconds % 60;
+    const secSuffix = sec === 1 ? 'second' : 'seconds';
+    const minSuffix = minutes === 1 ? 'minute' : 'minutes';
+    const hrSuffix = hours === 1 ? 'hour' : 'hours';
+    elapsedText = `${hours} ${hrSuffix}, ${minutes} ${minSuffix} and ${sec} ${secSuffix}`;
   }
 
   const avgBlocks = Math.round((totalTransactions / previous) * 100.0) / 100.0;
 
   let tweetText = `#ONT (@OntologyNetwork) latest block: #${latest}\n\n`;
   tweetText += `Last ${previous} block stats:\n`;
-  tweetText += `${time} elapsed\n`;
+  tweetText += `${elapsedText} elapsed\n`;
   tweetText += `${avgBlocks} tx per block\n`;
   tweetText += `${txPerSecond} tx per second\n`;
   tweetText += `${blockTime} sec average block time\n\n`;
