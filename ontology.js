@@ -221,6 +221,7 @@ function refreshNetworkStats(io) {
 
 */
 function tweetNetworkStats() {
+  console.log('Attempting to tweet network statistics');
   const stats = getStats();
   if (stats.latest !== 0) { // If stats have loaded
     twitter.sendUpdate(stats);
@@ -249,6 +250,7 @@ function canTweet(hr, min) {
 
 */
 function executeTweet(timeArray, tweet) {
+  console.log('Checking if can tweet');
   const { length } = timeArray;
   for (let i = 0; i < length; i += 1) {
     const time = timeArray[i];
@@ -256,6 +258,7 @@ function executeTweet(timeArray, tweet) {
       const hr = time[0];
       const min = time[1];
       if (canTweet(hr, min)) {
+        console.log('Tweeting...');
         tweet();
         break;
       }
@@ -270,6 +273,7 @@ function executeTweet(timeArray, tweet) {
 
 */
 function startTweetBot() {
+  console.log('Tweet bot application starting up');
   setInterval(() => {
     const {
       networkStatTimes,
@@ -285,6 +289,7 @@ function startTweetBot() {
 
 */
 function start(io) {
+  console.log('Ontology network started loading');
   setInterval(() => {
     refreshNetworkStats(io);
   }, refreshDelay);
