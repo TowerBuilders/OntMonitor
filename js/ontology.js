@@ -161,10 +161,9 @@ function getPromises(height) {
 
 */
 function refreshNetworkStats(io) {
-  console.log('Refreshing...');
   getBlockHeight()
     .then((height) => {
-      if (height > latest) {
+      if (height >= latest) {
         getBlock(height)
           .then(async (block) => {
             const promises = getPromises(height);
@@ -210,13 +209,15 @@ function refreshNetworkStats(io) {
                   const stats = getStats();
                   io.emit('StatUpdate', stats);
                 } else {
-                  console.log(`${height} < ${latest}`);
+                  console.log(`Not updating since ${height} < ${latest}`);
                 }
               });
           })
           .catch((error) => {
             console.log(`There was an error getting the block: ${error}`);
           });
+      } else {
+        console.log(`Not getting block since ${height} < ${latest}`);
       }
     })
     .catch((error) => {
