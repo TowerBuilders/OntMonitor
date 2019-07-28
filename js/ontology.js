@@ -10,7 +10,7 @@ const node = 'http://dappnode1.ont.io:20336';
 const rpcClient = new RpcClient(node);
 
 const previous = 1000; // In blocks
-const refreshDelay = 1000; // In milliseconds
+const refreshDelay = 500; // In milliseconds
 
 // Exported Stats
 let latest = 0;
