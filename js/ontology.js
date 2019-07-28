@@ -194,6 +194,7 @@ function refreshNetworkStats(io) {
                   const now = new Date().getTime();
                   const unixTS = now / 1000;
                   sinceLastBlock = elapsed(timestamp, unixTS);
+                  sinceLastBlock = Math.round(sinceLastBlock * 100) / 100;
 
                   const alertString = `
                   Latest Block: ${latest}
