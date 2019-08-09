@@ -23,6 +23,14 @@ let sinceLastBlock = 0;
 const blockDict = {};
 const oneMinute = 60 * 1000;
 
+let isLocal = false;
+
+function log(message) {
+  if (isLocal) {
+    console.log(message);
+  }
+}
+
 /*
 
   Gets a block for the height
@@ -36,7 +44,7 @@ function getBlock(height) {
       rpcClient.getBlockJson(height)
         .then((res) => {
           if (res.desc === 'UNKNOWN BLOCK') {
-            console.log('Retrying...');
+            log('Retrying...');
             setTimeout(() => {
               getBlock(height)
                 .then((b) => {
@@ -64,7 +72,7 @@ function getBlock(height) {
           }
         })
         .catch((error) => {
-          console.log('Failed to get block');
+          log('Failed to get block');
           reject(error);
         });
     }
@@ -110,7 +118,7 @@ function safeGetBlock(height, retry) {
         resolve(block);
       })
       .catch((error) => {
-        console.log(`Error in safeGetBlock: ${error}`);
+        log(`Error in safeGetBlock: ${error}`);
         if (retry > 0) {
           setTimeout(() => {
             safeGetBlock(height, retry - 1)
@@ -181,7 +189,7 @@ function refreshNetworkStats(io) {
 
                 blocks.forEach((newBlock) => {
                   if (newBlock == null) {
-                    console.log('A block was null!');
+                    log('A block was null!');
                   } else {
                     const newTime = newBlock.timestamp;
                     if (newTime < oldest) {
@@ -207,24 +215,24 @@ function refreshNetworkStats(io) {
                   Block Time: ${blockTime} seconds
                   Since Last Block: ${sinceLastBlock} seconds
                   `;
-                  console.log(alertString);
+                  log(alertString);
 
                   const stats = getStats();
                   io.emit('StatUpdate', stats);
                 } else {
-                  console.log(`Not updating since ${height} < ${latest}`);
+                  log(`Not updating since ${height} < ${latest}`);
                 }
               });
           })
           .catch((error) => {
-            console.log(`There was an error getting the block: ${error}`);
+            log(`There was an error getting the block: ${error}`);
           });
       } else {
-        console.log(`Not getting block since ${height} < ${latest}`);
+        log(`Not getting block since ${height} < ${latest}`);
       }
     })
     .catch((error) => {
-      console.log(`There was an error getting the block height: ${error}`);
+      log(`There was an error getting the block height: ${error}`);
     });
 }
 
@@ -234,7 +242,7 @@ function refreshNetworkStats(io) {
 
 */
 function tweetNetworkStats() {
-  console.log('Attempting to tweet network statistics');
+  log('Attempting to tweet network statistics');
   const stats = getStats();
   if (stats.latest !== 0) { // If stats have loaded
     twitter.sendNetworkUpdate(stats);
@@ -263,7 +271,7 @@ function canTweet(hr, min) {
 
 */
 function executeTweet(timeArray, tweet) {
-  console.log('Checking if can tweet');
+  log('Checking if can tweet');
   const { length } = timeArray;
   for (let i = 0; i < length; i += 1) {
     const time = timeArray[i];
@@ -271,7 +279,7 @@ function executeTweet(timeArray, tweet) {
       const hr = time[0];
       const min = time[1];
       if (canTweet(hr, min)) {
-        console.log('Tweeting...');
+        log('Tweeting...');
         tweet();
         break;
       }
@@ -286,7 +294,7 @@ function executeTweet(timeArray, tweet) {
 
 */
 function startTweetBot() {
-  console.log('Tweet bot application starting up');
+  log('Tweet bot application starting up');
   setInterval(() => {
     const {
       networkStatTimes,
@@ -301,8 +309,9 @@ function startTweetBot() {
   Starts the system
 
 */
-function start(io) {
-  console.log('Ontology network started loading');
+function start(io, local) {
+  isLocal = local;
+  log('Ontology network started loading');
   setInterval(() => {
     refreshNetworkStats(io);
   }, refreshDelay);
