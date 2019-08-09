@@ -6,7 +6,7 @@ const {
   RpcClient,
 } = ont;
 
-const node = 'http://dappnode1.ont.io:20336';
+const node = 'http://dappnode2.ont.io:20336';
 const rpcClient = new RpcClient(node);
 
 const previous = 1000; // In blocks
@@ -36,6 +36,7 @@ function getBlock(height) {
       rpcClient.getBlockJson(height)
         .then((res) => {
           if (res.desc === 'UNKNOWN BLOCK') {
+            console.log('Retrying...');
             setTimeout(() => {
               getBlock(height)
                 .then((b) => {
@@ -166,10 +167,15 @@ function refreshNetworkStats(io) {
       if (height >= latest) {
         getBlock(height)
           .then(async (block) => {
+            const { timestamp } = block;
+            const now = new Date().getTime();
+            const unixTS = now / 1000;
+            sinceLastBlock = elapsed(timestamp, unixTS);
+            sinceLastBlock = Math.round(sinceLastBlock * 100) / 100;
             const promises = getPromises(height);
+
             Promise.all(promises)
               .then((blocks) => {
-                const { timestamp } = block;
                 let oldest = timestamp;
                 let txCount = 0;
 
@@ -191,10 +197,6 @@ function refreshNetworkStats(io) {
                   totalTransactions = txCount * 1.0;
                   txPerSecond = Math.round((totalTransactions / elapsedTime) * 100) / 100;
                   blockTime = Math.round((elapsedTime / previous) * 100) / 100;
-                  const now = new Date().getTime();
-                  const unixTS = now / 1000;
-                  sinceLastBlock = elapsed(timestamp, unixTS);
-                  sinceLastBlock = Math.round(sinceLastBlock * 100) / 100;
 
                   const alertString = `
                   Latest Block: ${latest}
