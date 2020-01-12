@@ -253,6 +253,16 @@ function tweetNetworkStats() {
   }
 }
 
+function tweetStakingInfo() {
+  log('Attempting to tweet the staking info');
+  twitter.sendStakingInfo();
+}
+
+function tweetNodeInfo() {
+  log('Attempting to tweet the node info');
+  twitter.sendNodeInfo();
+}
+
 /*
 
   Checks whether the current time matches
@@ -298,9 +308,13 @@ function startTweetBot() {
   setInterval(() => {
     const {
       networkStatTimes,
+      stakingInfoTimes,
+      nodeInfoTimes,
     } = tweetConfig.config;
 
     executeTweet(networkStatTimes, tweetNetworkStats);
+    executeTweet(stakingInfoTimes, tweetStakingInfo);
+    executeTweet(nodeInfoTimes, tweetNodeInfo);
   }, oneMinute);
 }
 
