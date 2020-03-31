@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Monitor the Ontology Network",
   "author": "Ryu Blockchain Technologies",
-  "repository": "https://github.com/Ryucoin/OntMonitor",
+  "repository": "https://github.com/RyuGames/OntMonitor",
   "main": "app.js",
   "dependencies": {
     "axios": "^0.18.1",
