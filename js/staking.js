@@ -75,7 +75,7 @@ const governance = {
   AN6xsEH2JpA8drNWYL8TTbmRF5oC6t9V9H: 'Pherkad (Ontology Foundation)',
   AMJskicSD18QzVYcx5o4F6d67dbG4kKW7v: 'Points Foundation',
   AdW4BrKWQaRzKTZaCHzBexFJzgK7iDNudN: 'BigONE',
-  APP42849YXfRtDp5Y4bTVbt1g5vhajAAya: 'Animals.NET',
+  APP42849YXfRtDp5Y4bTVbt1g5vhajAAya: 'Animals NET',
 };
 
 function getStakeInfo() {
